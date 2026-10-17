@@ -24,6 +24,10 @@ That changes what a "good" dev machine is:
 
 So the goal: **a fresh Mac to a fully working, agent-ready DevOps machine with one command, where every choice is explained.**
 
+### Minimal by default
+
+Developers (rightly) hate bloated setups. Every tool here has to earn its place in **core**. Everything else, such as GUIs, prettier `ls`, themes and extra VS Code extensions, lives in an **extras** list that the bootstrap offers with a default of *no*. You get a lean machine and opt in to the rest.
+
 ---
 
 ## Step 0: Prerequisites
@@ -68,7 +72,7 @@ The [`github` step](../scripts/github.sh) signs in the **GitHub CLI** and lets g
 
 ## Step 5: Azure and Infrastructure as Code
 
-For Azure work the kit is `az`, **`azd`** (one command to provision and deploy a whole app) and **Bicep**. For multi-cloud, **Terraform** *and* **OpenTofu**: OpenTofu is the community open-source fork created after Terraform's licence change, and many teams now use it by default. **TFLint** catches mistakes early. Kubernetes comes with **kubectl**, **Helm**, **k9s** and **kubelogin**, which handles Entra ID sign-in for AKS.
+For Azure work the kit is `az`, **`azd`** (one command to provision and deploy a whole app) and **Bicep**. For multi-cloud, **Terraform** *and* **OpenTofu**: OpenTofu is the community open-source fork created after Terraform's licence change, and many teams now use it by default. **TFLint** catches mistakes early. Kubernetes comes with **kubectl**, **Helm** and **kubelogin**, which handles Entra ID sign-in for AKS.
 
 ## Step 6: The agents
 
@@ -101,14 +105,37 @@ These run on the laptop so problems are caught before a push:
 - **gitleaks:** secrets in commits
 - **Trivy:** misconfigured Bicep/Terraform, vulnerable images and dependencies
 - **pre-commit:** runs the above automatically
-- **act:** run GitHub Actions locally to test pipelines
-- **ShellCheck:** shell script bugs
+- *(extras)* **act** to run GitHub Actions locally, and **ShellCheck** for shell scripts
 
 ## Step 8: VS Code
 
-VS Code gets 27 extensions (Bicep, Terraform, Kubernetes, Containers, Dev Containers, Python with Ruff, PowerShell, GitLens, Error Lens, Claude Code and Copilot). It formats on save with the right formatter per language, telemetry is off, and Dev Containers is wired to Podman.
+It's easy to end up with 40 VS Code extensions, each one slowing startup and adding noise. Core is **8**:
 
-## Step 9: macOS for developers
+| Extension | Why it's core |
+|---|---|
+| Claude Code, GitHub Copilot | The agents, inside the editor |
+| Bicep, Terraform | IaC language support and formatting |
+| Dev Containers | Reproducible project environments (wired to Podman) |
+| GitHub Actions | Pipelines are code too |
+| YAML | Pipelines, Kubernetes and compose files |
+| EditorConfig | Respect each repo's formatting rules |
+
+Everything else comes as **optional packs** you pick: Theme, Git (GitLens), Containers & Kubernetes, Azure & scripting, Python, Web, Writing & quality. Settings format on save, turn telemetry off and keep the UI quiet.
+
+## Step 9: Give every repo rules for its agents
+
+Agents are only as safe as the instructions they get. The repo includes a generic **[`AGENTS.md`](../templates/AGENTS.md)**, the emerging cross-tool standard read by Copilot, OpenCode and others, with DevOps safety rules baked in:
+
+- `plan` and `what-if` are fine; **`apply`, `deploy` and `destroy` are for humans**
+- never delete cloud resources unasked; check the subscription and cluster context first
+- never read or commit secrets; prefer managed identity and Key Vault
+- branches and small commits, never force-push
+
+**[`CLAUDE.md`](../templates/CLAUDE.md)** simply imports `AGENTS.md`, so there's one set of rules for every agent. A **[`.claude/settings.json`](../templates/.claude/settings.json)** goes further and *enforces* it: Claude Code must ask before `terraform apply`, `azd up` or `kubectl delete`, and is blocked from reading `.env`, keys, `*.tfvars` and state files.
+
+Type `agent-init` in any repo to drop all three in.
+
+## Step 10: macOS for developers
 
 A short list of settings that make macOS friendlier to engineers: a Dock with only your dev apps that hides itself, Finder showing extensions, hidden files and the path, fast key repeat, and, importantly, **smart quotes and dashes turned off**, because a curly quote in a pasted command is a classic time-waster. The firewall gets turned on too. The script backs up your current settings first.
 

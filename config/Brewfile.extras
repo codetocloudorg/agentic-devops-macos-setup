@@ -1,0 +1,26 @@
+# Agentic DevOps macOS setup: OPTIONAL EXTRAS
+# Install all:   brew bundle --file config/Brewfile.extras
+# Or one:        brew install <name>      (casks: brew install --cask <name>)
+
+# ---------- Containers & Kubernetes UIs ----------
+cask "podman-desktop"       # GUI for containers & pods
+brew "k9s"                  # terminal UI for Kubernetes
+
+# ---------- Git ----------
+brew "lazygit"              # terminal UI for git
+
+# ---------- Scripting & CI ----------
+cask "powershell@preview"   # Azure automation scripts (stable cask no longer published)
+brew "shellcheck"           # shell linter
+brew "act"                  # run GitHub Actions locally
+
+# ---------- Nicer CLI ----------
+brew "bat"                  # cat with syntax highlighting
+brew "eza"                  # ls with git status & icons
+brew "btop"                 # system monitor
+brew "tldr"                 # short command examples
+brew "tree"
+brew "wget"
+
+# ---------- Productivity ----------
+cask "granola"              # AI meeting notes

@@ -17,6 +17,7 @@ One command takes a fresh Mac to a fully configured DevOps machine: terminal, ed
 - [What gets installed](#what-gets-installed)
 - [How it works](#how-it-works)
 - [Bootstrap with Claude Code](#bootstrap-with-claude-code)
+- [Agent instructions for your projects](#agent-instructions-for-your-projects)
 - [After installing](#after-installing)
 - [Customising](#customising)
 - [Troubleshooting](#troubleshooting)
@@ -73,76 +74,41 @@ When it finishes, **quit Terminal and open Ghostty**. Then log out and back in s
 
 ## What gets installed
 
-Everything is listed in [`config/Brewfile`](config/Brewfile). Edit that file to add or remove tools.
+**Minimal by default.** The core install is only what an agent-assisted DevOps workflow needs. Nice-to-haves are optional extras that the bootstrap offers (default **no**), or you can install them yourself later.
 
-### Terminal and shell
-| Tool | What it's for |
+| | Core (always) | Extras (optional) |
+|---|---|---|
+| Apps and CLI tools | [`config/Brewfile`](config/Brewfile) | [`config/Brewfile.extras`](config/Brewfile.extras) |
+| VS Code extensions | [`config/vscode/extensions.txt`](config/vscode/extensions.txt): 8 | [`config/vscode/extensions-extras.txt`](config/vscode/extensions-extras.txt): packs |
+
+Install all extras without prompts: `EXTRAS=1 ./bootstrap.sh --only "packages vscode"`
+
+### Core
+
+| Area | Tools | Why |
+|---|---|---|
+| **Terminal** | [Ghostty](https://ghostty.org), [tmux](https://github.com/tmux/tmux), [Starship](https://starship.rs), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), zsh autosuggestions and syntax highlighting, JetBrains Mono Nerd Font | Fast native terminal, sessions that survive, `z <dir>` jumps, **Ctrl‑R** history search |
+| **Editor** | [VS Code](https://code.visualstudio.com) + 8 extensions | Claude Code, Copilot, Bicep, Terraform, Dev Containers, GitHub Actions, YAML, EditorConfig. Nothing else |
+| **Git** | git (latest), [GitHub CLI](https://cli.github.com) `gh`, [delta](https://github.com/dandavison/delta) | PRs and Actions from the terminal; readable diffs |
+| **Containers** | [Podman](https://podman.io), podman-compose | Docker-compatible, rootless, no licence fees. `docker` is aliased to `podman` |
+| **Kubernetes** | kubectl, [Helm](https://helm.sh), [kubelogin](https://github.com/Azure/kubelogin) | Clusters, charts, Entra ID sign-in for AKS |
+| **Azure** | Azure CLI `az`, [Azure Developer CLI](https://aka.ms/azd) `azd` | Manage Azure; `azd up` provisions and deploys whole apps |
+| **IaC** | [Bicep](https://aka.ms/bicep), [Terraform](https://terraform.io), [OpenTofu](https://opentofu.org), [TFLint](https://github.com/terraform-linters/tflint) | Azure-native and multi-cloud IaC. OpenTofu is the open-source fork |
+| **AI agents** | [Claude Code](https://claude.com/claude-code), [GitHub Copilot CLI](https://docs.github.com/copilot), [OpenCode](https://opencode.ai) | Three terminal coding agents. Use the one your team prefers |
+| **Local models** | [Foundry Local](https://aka.ms/foundry-local) | Runs open models **on-device** on the Apple Silicon GPU. Private, offline, free |
+| **Guardrails** | [gitleaks](https://github.com/gitleaks/gitleaks), [Trivy](https://trivy.dev), [pre-commit](https://pre-commit.com) | Catch secrets, IaC misconfigurations and CVEs before you push |
+| **Runtimes** | [mise](https://mise.jdx.dev) (Node LTS, Python 3.13, tflint), [uv](https://docs.astral.sh/uv/), [direnv](https://direnv.net) | One version manager instead of nvm + pyenv + … |
+| **Essentials** | jq, yq, ripgrep, fd | JSON/YAML wrangling and fast search, which agents use heavily too |
+
+### Extras (optional)
+
+| Tools | Why you might want them |
 |---|---|
-| [Ghostty](https://ghostty.org) | Fast, native, GPU-accelerated terminal |
-| [tmux](https://github.com/tmux/tmux) | Keep terminal sessions running; split panes |
-| [Starship](https://starship.rs) | Prompt showing git branch, language versions, cloud context |
-| [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf) | `z project` jumps to folders; **Ctrl‑R** fuzzy-searches history |
-| zsh-autosuggestions, zsh-syntax-highlighting | Fish-like suggestions and colouring |
-| JetBrains Mono Nerd Font | Coding font with icons |
-
-### Editor
-| Tool | What it's for |
-|---|---|
-| [VS Code](https://code.visualstudio.com) | Editor, with [27 curated extensions](config/vscode/extensions.txt) and [tuned settings](config/vscode/settings.json) |
-
-### Git and GitHub
-| Tool | What it's for |
-|---|---|
-| git (latest) | Newer than Apple's bundled version |
-| [GitHub CLI](https://cli.github.com) (`gh`) | PRs, issues, Actions, and git sign-in from the terminal |
-| [delta](https://github.com/dandavison/delta) | Readable, syntax-highlighted diffs |
-| [lazygit](https://github.com/jesseduffield/lazygit) | Terminal UI for git (`lg`) |
-
-### Containers and Kubernetes
-| Tool | What it's for |
-|---|---|
-| [Podman](https://podman.io) + Podman Desktop | Docker-compatible containers, rootless and daemonless. `docker` is aliased to `podman` |
-| podman-compose | Runs `docker-compose.yml` files |
-| kubectl, [Helm](https://helm.sh), [k9s](https://k9scli.io) | Kubernetes CLI, package manager, terminal UI |
-| [kubelogin](https://github.com/Azure/kubelogin) | Entra ID sign-in for AKS clusters |
-
-### Azure and Infrastructure as Code
-| Tool | What it's for |
-|---|---|
-| Azure CLI (`az`), [Azure Developer CLI](https://aka.ms/azd) (`azd`) | Manage Azure; `azd up` provisions and deploys whole apps |
-| [Bicep](https://aka.ms/bicep) | Azure-native IaC |
-| [Terraform](https://terraform.io) and [OpenTofu](https://opentofu.org) | Multi-cloud IaC. OpenTofu is the open-source (MPL) fork |
-| [TFLint](https://github.com/terraform-linters/tflint) | Terraform linter (via mise) |
-| PowerShell (preview) | Azure automation scripts |
-
-### AI agents and local models
-| Tool | What it's for |
-|---|---|
-| [Claude Code](https://claude.com/claude-code) | Anthropic's agentic coding tool in the terminal and VS Code |
-| [GitHub Copilot CLI](https://docs.github.com/copilot) | GitHub's coding agent in the terminal |
-| [OpenCode](https://opencode.ai) | Open-source terminal agent that works with any model provider, including local |
-| [Foundry Local](https://aka.ms/foundry-local) | Runs open models (Phi, Qwen, …) **on-device** on the Apple Silicon GPU. Private, offline, free |
-
-### Security and quality guardrails
-| Tool | What it's for |
-|---|---|
-| [gitleaks](https://github.com/gitleaks/gitleaks) | Catch secrets before they're committed |
-| [Trivy](https://trivy.dev) | Scan IaC, containers and dependencies for misconfigurations and CVEs |
-| [pre-commit](https://pre-commit.com) | Run checks automatically on every commit |
-| [ShellCheck](https://www.shellcheck.net) | Shell script linter |
-| [act](https://github.com/nektos/act) | Run GitHub Actions locally before pushing |
-
-### Runtimes and everyday CLI tools
-| Tool | What it's for |
-|---|---|
-| [mise](https://mise.jdx.dev) | One version manager for Node, Python, Go, tflint… (replaces nvm/pyenv) |
-| [uv](https://docs.astral.sh/uv/) | Very fast Python package and project manager |
-| [direnv](https://direnv.net) | Per-folder environment variables |
-| ripgrep, fd, bat, eza, jq, yq, btop, tldr | Modern replacements for grep, find, cat, ls, plus JSON/YAML tools |
-
-Default runtimes: **Node LTS** and **Python 3.13** ([`config/mise/config.toml`](config/mise/config.toml)).
-
----
+| Podman Desktop, k9s, lazygit | GUIs / terminal UIs for containers, Kubernetes and git |
+| PowerShell (preview), ShellCheck, act | Azure scripting, shell linting, run GitHub Actions locally |
+| bat, eza, btop, tldr, tree, wget | Nicer `cat` / `ls`, system monitor, short command examples (aliases switch on automatically if installed) |
+| [Granola](https://www.granola.ai) | AI meeting notes |
+| VS Code packs | Theme (Catppuccin), Git (GitLens, PRs), Containers & Kubernetes, Azure & scripting, Python, Web, Writing & quality |
 
 ## How it works
 
@@ -152,13 +118,13 @@ Default runtimes: **Node LTS** and **Python 3.13** ([`config/mise/config.toml`](
 |---|---|
 | `preflight` | Checks every prerequisite; installs Xcode Command Line Tools |
 | `homebrew` | Installs Homebrew |
-| `packages` | Installs everything in `config/Brewfile` |
+| `packages` | Installs `config/Brewfile`; offers the extras |
 | `shell` | Links zsh, Ghostty, tmux and git-ignore config into your home folder |
 | `git` | Sets your name and email, plus [sensible defaults](scripts/git.sh) (rebase on pull, auto-upstream, better diffs…) |
 | `github` | Signs in to GitHub CLI; optionally creates an SSH key for auth **and signed commits** |
 | `runtimes` | Installs Node, Python and tflint via mise |
 | `podman` | Creates and starts the Podman VM, sized to your Mac |
-| `vscode` | Adds the `code` command, links settings, installs extensions |
+| `vscode` | Adds the `code` command, links settings, installs the 8 core extensions; offers the packs |
 | `macos` | *(asks first)* Dock, Finder and keyboard settings for developers; turns on the firewall |
 | `ai` | Installs Claude Code; checks Copilot CLI, OpenCode and Foundry Local |
 | `verify` | Health check of every tool and sign-in |
@@ -195,6 +161,27 @@ Then type **`/bootstrap`** (or just *"set up my Mac"*). Claude reads [`CLAUDE.md
 
 ---
 
+## Agent instructions for your projects
+
+AI agents work far better, and more safely, when each repo tells them the rules. [`templates/`](templates/) has a generic starter:
+
+| File | Read by | What it does |
+|---|---|---|
+| [`AGENTS.md`](templates/AGENTS.md) | GitHub Copilot, OpenCode and most other agents | Project context, commands, and **DevOps safety rules**: plan but never apply, never delete cloud resources, never touch secrets, work on branches |
+| [`CLAUDE.md`](templates/CLAUDE.md) | Claude Code | Imports `AGENTS.md`, so you maintain **one** set of rules for all agents |
+| [`.claude/settings.json`](templates/.claude/settings.json) | Claude Code | Enforced guardrails: auto-allows `plan` / `validate` / `lint`; **asks** before `apply`, `azd up`, `kubectl apply/delete`, `git push`; **blocks** reading `.env`, keys, `*.tfvars` and state files, and blocks force-push |
+
+Add them to any repo (existing files are never overwritten):
+
+```bash
+cd ~/Dev/my-project
+agent-init
+```
+
+Then fill in the `TODO`s in `AGENTS.md`: what the project is, and its test and lint commands.
+
+---
+
 ## After installing
 
 1. **Sign in to Azure:** `az login` then `azd auth login`
@@ -210,8 +197,9 @@ Then type **`/bootstrap`** (or just *"set up my Mac"*). Claude reads [`CLAUDE.md
 | Jump to a folder you've visited | `z <part-of-name>` |
 | Search command history | **Ctrl‑R** |
 | Find a file | **Ctrl‑T** |
-| Git UI | `lg` |
-| Kubernetes UI | `k9s` |
+| Git UI *(extras)* | `lg` |
+| Kubernetes UI *(extras)* | `k9s` |
+| Add agent rules to a repo | `agent-init` |
 | Run containers | `docker run …` (it's Podman) |
 | New tmux session / detach / reattach | `tmux new -s work` / **Ctrl‑a d** / `tmux a -t work` |
 | tmux split side by side / top and bottom | **Ctrl‑a \|** / **Ctrl‑a -** |
@@ -223,8 +211,9 @@ Then type **`/bootstrap`** (or just *"set up my Mac"*). Claude reads [`CLAUDE.md
 
 | I want to… | Edit |
 |---|---|
-| Add or remove apps and tools | [`config/Brewfile`](config/Brewfile), then `./bootstrap.sh --only packages` |
-| Add VS Code extensions | [`config/vscode/extensions.txt`](config/vscode/extensions.txt) |
+| Add or remove apps and tools | [`config/Brewfile`](config/Brewfile) or [`Brewfile.extras`](config/Brewfile.extras), then `./bootstrap.sh --only packages` |
+| Add VS Code extensions | [`extensions.txt`](config/vscode/extensions.txt) or [`extensions-extras.txt`](config/vscode/extensions-extras.txt) |
+| Change agent rules for every new repo | [`templates/`](templates/) |
 | Change runtime versions | [`config/mise/config.toml`](config/mise/config.toml) |
 | Add personal aliases or secrets | `~/.zshrc.local` (not tracked by git) |
 | Change the Dock apps | the `for app in …` list in [`scripts/macos.sh`](scripts/macos.sh) |
@@ -243,7 +232,7 @@ Then type **`/bootstrap`** (or just *"set up my Mac"*). Claude reads [`CLAUDE.md
 | Homebrew *"untrusted tap"* | Run `./bootstrap.sh --only packages`; it trusts the official HashiCorp, Azure and Microsoft taps |
 | Corporate proxy / VPN blocks downloads | Set `HTTPS_PROXY`, or disconnect from VPN for the install |
 | `docker` tools can't find Podman | `podman machine start`, or accept the `podman-mac-helper` prompt in the `podman` step |
-| Podman VM gone after reboot | `podman machine start` (or enable auto-start in Podman Desktop) |
+| Podman VM gone after reboot | `podman machine start`  |
 | New shell settings not showing | Open a new Ghostty window, or run `exec zsh` |
 | Something seems off | `./bootstrap.sh --only verify` |
 

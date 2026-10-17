@@ -1,6 +1,7 @@
 {
   // ---- Look ----
   "workbench.startupEditor": "none",
+  // Catppuccin comes from the optional Theme pack; VS Code falls back to its default theme without it.
   "workbench.colorTheme": "Catppuccin Mocha",
   "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
   "workbench.preferredLightColorTheme": "Catppuccin Latte",
@@ -36,13 +37,9 @@
   "search.exclude": { "**/node_modules": true, "**/.venv": true, "**/dist": true, "**/.terraform": true },
   "files.watcherExclude": { "**/node_modules/**": true, "**/.venv/**": true },
 
-  // ---- Formatters ----
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
-  "[powershell]": { "editor.defaultFormatter": "ms-vscode.powershell" },
+  // ---- Formatters (extensions register their own; these pin IaC) ----
   "[bicep]": { "editor.defaultFormatter": "ms-azuretools.vscode-bicep" },
   "[terraform]": { "editor.defaultFormatter": "hashicorp.terraform" },
-  "[toml]": { "editor.defaultFormatter": "tamasfe.even-better-toml" },
   "[markdown]": { "files.trimTrailingWhitespace": false, "editor.wordWrap": "on" },
 
   // ---- Terminal ----

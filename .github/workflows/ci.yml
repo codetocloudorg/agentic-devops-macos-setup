@@ -17,6 +17,8 @@ jobs:
           fetch-depth: 0
       - name: ShellCheck
         run: shellcheck -s bash bootstrap.sh install.sh lib/*.sh scripts/*.sh
+      - name: Templates are valid JSON
+        run: python3 -c "import json; json.load(open('templates/.claude/settings.json'))"
       - name: gitleaks (secret scan, full history)
         run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --no-banner --redact
 
@@ -29,4 +31,4 @@ jobs:
       - name: Preflight
         run: CI=1 ./bootstrap.sh --only preflight
       - name: Brewfile parses
-        run: brew bundle list --file config/Brewfile --all >/dev/null
+        run: brew bundle list --file config/Brewfile --all >/dev/null && brew bundle list --file config/Brewfile.extras --all >/dev/null

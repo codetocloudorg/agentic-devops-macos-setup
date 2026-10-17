@@ -12,7 +12,9 @@ Bootstrap scripts for an Apple Silicon Mac developer workstation. Bash 3.2 compa
 - Every step must be safe to re-run and must back up before overwriting (use `link`).
 - Never put personal data (names, emails, keys) in `config/`; prompt for it in scripts.
 - Lint before committing: `shellcheck -s bash bootstrap.sh install.sh lib/*.sh scripts/*.sh`
-- When adding a tool: Brewfile, README "What gets installed" table, and `scripts/verify.sh`.
+- Minimal by default: new tools go in `config/Brewfile.extras` (or `extensions-extras.txt`) unless the core workflow needs them.
+- When adding a core tool: Brewfile, README "What gets installed" table, and `scripts/verify.sh`.
+- `templates/` holds generic AGENTS.md / CLAUDE.md / .claude/settings.json copied into user projects by `agent-init` (in config/zsh/zshrc).
 
 ## Helping someone set up their Mac
 Use the `/bootstrap` skill.

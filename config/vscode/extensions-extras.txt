@@ -1,0 +1,35 @@
+# Optional packs. Install all with:  ./bootstrap.sh --only vscode  (answer yes)
+# or pick individual lines:          code --install-extension <id>
+
+# Theme: matches Ghostty
+catppuccin.catppuccin-vsc
+catppuccin.catppuccin-vsc-icons
+
+# Git
+eamodio.gitlens
+github.vscode-pull-request-github
+
+# Containers, Kubernetes & remote
+ms-azuretools.vscode-containers
+ms-kubernetes-tools.vscode-kubernetes-tools
+ms-vscode-remote.remote-ssh
+
+# Azure & scripting
+ms-azuretools.vscode-azureresourcegroups
+ms-vscode.powershell
+timonwong.shellcheck
+
+# Python
+ms-python.python
+charliermarsh.ruff
+
+# Web
+esbenp.prettier-vscode
+dbaeumer.vscode-eslint
+
+# Writing & quality
+usernamehw.errorlens
+yzhang.markdown-all-in-one
+streetsidesoftware.code-spell-checker
+tamasfe.even-better-toml
+mikestead.dotenv

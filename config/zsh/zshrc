@@ -32,16 +32,31 @@ alias docker=podman
 alias docker-compose=podman-compose
 
 # ---- Aliases ----
-alias ls='eza --group-directories-first'
-alias ll='eza -lah --git --group-directories-first'
-alias lt='eza --tree --level=2'
-alias cat='bat --paging=never'
-alias lg=lazygit
+# Nicer tools from Brewfile.extras, only if installed
+if (( $+commands[eza] )); then
+  alias ls='eza --group-directories-first'
+  alias ll='eza -lah --git --group-directories-first'
+  alias lt='eza --tree --level=2'
+else
+  alias ll='ls -lahG'
+fi
+(( $+commands[bat] )) && alias cat='bat --paging=never'
+(( $+commands[lazygit] )) && alias lg=lazygit
 alias gs='git status -sb'
 
 # ---- Plugins (keep syntax-highlighting last) ----
 source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# ---- agent-init: drop AGENTS.md, CLAUDE.md and Claude guardrails into the current repo ----
+agent-init() {
+  local tpl="${${(%):-%x}:A:h:h:h}/templates"   # resolves ~/.zshrc symlink back to this repo
+  local f
+  for f in AGENTS.md CLAUDE.md .claude/settings.json; do
+    if [[ -e "$f" ]]; then echo "skip  $f (exists)"; else mkdir -p "${f:h}"; cp "$tpl/$f" "$f"; echo "added $f"; fi
+  done
+  echo "Now fill in the TODOs in AGENTS.md."
+}
 
 # ---- Personal, untracked overrides ----
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

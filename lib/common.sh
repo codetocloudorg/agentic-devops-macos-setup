@@ -27,6 +27,13 @@ confirm() {
   [[ -z "$reply" || "$reply" =~ ^[Yy] ]]
 }
 
+# Same as confirm, but defaults to no. CI=1 and non-interactive runs answer no.
+confirm_no() {
+  [[ -t 0 && "${CI:-}" != "1" ]] || return 1
+  read -r -p "  ? $1 [y/N] " reply
+  [[ "$reply" =~ ^[Yy] ]]
+}
+
 # Symlink a repo config file into place, backing up anything already there.
 link() {
   local src="$1" dest="$2"

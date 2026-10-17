@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs every app and CLI tool listed in config/Brewfile.
+# Installs the core apps and CLI tools in config/Brewfile (extras on request).
 source "$(dirname "$0")/../lib/common.sh"
 step "Apps & CLI tools (config/Brewfile)"
 
@@ -19,4 +19,10 @@ done
 
 # Some casks (fonts, Podman Desktop) can ask for your password.
 brew bundle --file "$CONFIG/Brewfile"
-ok "All Brewfile packages installed"
+ok "Core packages installed"
+
+# Optional extras (Podman Desktop, k9s, lazygit, Granola, …). EXTRAS=1 installs without asking.
+if [[ "${EXTRAS:-}" == "1" ]] || confirm_no "Also install optional extras (see config/Brewfile.extras)?"; then
+  brew bundle --file "$CONFIG/Brewfile.extras"
+  ok "Extras installed"
+fi
