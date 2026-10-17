@@ -12,20 +12,18 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ShellCheck
         run: shellcheck -s bash bootstrap.sh install.sh lib/*.sh scripts/*.sh
-      - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: gitleaks (secret scan, full history)
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --no-banner --redact
 
   preflight:
     runs-on: macos-latest   # Apple Silicon runner
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Bash 3.2 syntax check
         run: for f in bootstrap.sh install.sh lib/*.sh scripts/*.sh; do /bin/bash -n "$f"; done
       - name: Preflight
