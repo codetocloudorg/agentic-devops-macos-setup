@@ -12,7 +12,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: ShellCheck
@@ -25,7 +25,7 @@ jobs:
   preflight:
     runs-on: macos-latest   # Apple Silicon runner
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Bash 3.2 syntax check
         run: for f in bootstrap.sh install.sh lib/*.sh scripts/*.sh; do /bin/bash -n "$f"; done
       - name: Preflight

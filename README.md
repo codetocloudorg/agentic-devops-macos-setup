@@ -57,7 +57,7 @@ Open **Terminal** (⌘ Space → "Terminal") and paste:
 curl -fsSL https://raw.githubusercontent.com/codetocloudorg/agentic-devops-macos-setup/main/install.sh | bash
 ```
 
-This installs the Xcode Command Line Tools (for `git`), clones the repo to `~/Dev/agentic-devops-macos-setup`, and runs the bootstrap.
+This installs the Xcode Command Line Tools (for `git`), clones the **latest release** of this repo to `~/Dev/agentic-devops-macos-setup`, and runs the bootstrap. (`REF=main` gets the bleeding edge.)
 
 **Prefer to read the code first?** (Recommended.)
 
@@ -144,7 +144,8 @@ Install all extras without prompts: `EXTRAS=1 ./bootstrap.sh --only "packages vs
 - **Logged.** Every run is saved to `~/.local/share/agentic-devops-setup/bootstrap-<timestamp>.log`.
 - **Resumable.** If a step fails, it tells you the exact command to resume from that step.
 - **Linked, not copied.** Config files are *symlinked* to this repo, so `git pull` updates your machine and `git diff` shows what you've changed.
-- **CI-checked.** Every push is linted with ShellCheck and scanned with gitleaks.
+- **CI-checked.** Every change is linted with ShellCheck and secret-scanned with gitleaks.
+- **Supply-chain aware.** `main` is protected (pull requests + passing CI, no force-push), GitHub secret scanning and push protection are on, CI actions are pinned to commit SHAs and kept current by Dependabot, and the installer uses release tags.
 
 ---
 

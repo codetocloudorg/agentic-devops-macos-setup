@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # One-line installer:
 #   curl -fsSL https://raw.githubusercontent.com/codetocloudorg/agentic-devops-macos-setup/main/install.sh | bash
-# Clones (or updates) the repo into ~/Dev/agentic-devops-macos-setup, then runs bootstrap.sh.
+# Clones the repo into ~/Dev/agentic-devops-macos-setup at the LATEST RELEASE TAG (not main),
+# so only reviewed, released code runs. Override with REF=main or REF=v1.2.0.
 set -euo pipefail
 
 REPO="https://github.com/codetocloudorg/agentic-devops-macos-setup.git"
@@ -16,11 +17,17 @@ if ! xcode-select -p >/dev/null 2>&1; then
   until xcode-select -p >/dev/null 2>&1; do sleep 10; done
 fi
 
+REF="${REF:-$(git ls-remote --tags --refs --sort=-version:refname "$REPO" 'v*' | head -1 | sed 's|.*refs/tags/||')}"
+REF="${REF:-main}"
+echo "Installing $REF"
+
 if [[ -d "$DEST/.git" ]]; then
-  git -C "$DEST" pull --ff-only
+  git -C "$DEST" fetch --tags --quiet origin
+  git -C "$DEST" checkout --quiet "$REF"
+  [[ "$REF" == "main" ]] && git -C "$DEST" pull --ff-only --quiet
 else
   mkdir -p "$(dirname "$DEST")"
-  git clone "$REPO" "$DEST"
+  git clone --quiet --branch "$REF" "$REPO" "$DEST"
 fi
 
 # Reattach stdin to the terminal so prompts work when piped from curl
