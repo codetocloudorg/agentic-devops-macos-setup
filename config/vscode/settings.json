@@ -1,0 +1,80 @@
+{
+  // ---- Look ----
+  "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Latte",
+  "window.autoDetectColorScheme": true,
+  "workbench.iconTheme": "catppuccin-mocha",
+  "editor.fontFamily": "'JetBrainsMono Nerd Font', Menlo, monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.6,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.stickyScroll.enabled": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "workbench.tree.indent": 14,
+  "breadcrumbs.enabled": true,
+
+  // ---- Editing ----
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "editor.linkedEditing": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.rulers": [100],
+  "editor.codeActionsOnSave": { "source.organizeImports": "explicit" },
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.eol": "\n",
+  "search.exclude": { "**/node_modules": true, "**/.venv": true, "**/dist": true, "**/.terraform": true },
+  "files.watcherExclude": { "**/node_modules/**": true, "**/.venv/**": true },
+
+  // ---- Formatters ----
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
+  "[powershell]": { "editor.defaultFormatter": "ms-vscode.powershell" },
+  "[bicep]": { "editor.defaultFormatter": "ms-azuretools.vscode-bicep" },
+  "[terraform]": { "editor.defaultFormatter": "hashicorp.terraform" },
+  "[toml]": { "editor.defaultFormatter": "tamasfe.even-better-toml" },
+  "[markdown]": { "files.trimTrailingWhitespace": false, "editor.wordWrap": "on" },
+
+  // ---- Terminal ----
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.stickyScroll.enabled": true,
+
+  // ---- Git ----
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.pruneOnFetch": true,
+  "git.rebaseWhenSync": true,
+  "scm.defaultViewMode": "tree",
+  "gitlens.codeLens.enabled": false,
+  "gitlens.currentLine.enabled": true,
+
+  // ---- Containers: use Podman ----
+  "containers.containerClient": "com.microsoft.visualstudio.containers.podman",
+  "dev.containers.dockerPath": "podman",
+  "dev.containers.dockerComposePath": "podman-compose",
+
+  // ---- Extensions ----
+  "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+  "cSpell.enabledFileTypes": { "*": false, "markdown": true, "plaintext": true, "git-commit": true },
+  "redhat.telemetry.enabled": false,
+
+  // ---- Privacy / noise ----
+  "telemetry.telemetryLevel": "off",
+  "workbench.tips.enabled": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": true,
+  "security.workspace.trust.untrustedFiles": "prompt"
+}

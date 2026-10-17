@@ -1,0 +1,75 @@
+# Agentic DevOps macOS setup (Apple Silicon)
+# Install everything: brew bundle --file config/Brewfile
+
+tap "hashicorp/tap"
+tap "azure/bicep"
+tap "azure/kubelogin"
+tap "microsoft/foundrylocal"
+
+# ---------- Terminal & shell ----------
+cask "ghostty"
+cask "font-jetbrains-mono-nerd-font"
+brew "tmux"                 # terminal multiplexer
+brew "starship"             # prompt
+brew "zoxide"               # smarter cd
+brew "fzf"                  # fuzzy finder (Ctrl-R / Ctrl-T)
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+# ---------- Editor ----------
+cask "visual-studio-code"
+
+# ---------- Git & GitHub ----------
+brew "git"                  # newer than Apple's
+brew "git-delta"            # readable diffs
+brew "lazygit"
+brew "gh"                   # GitHub CLI
+
+# ---------- Containers ----------
+brew "podman"
+brew "podman-compose"
+cask "podman-desktop"
+
+# ---------- Kubernetes / AKS ----------
+brew "kubernetes-cli"       # kubectl
+brew "helm"
+brew "k9s"
+brew "azure/kubelogin/kubelogin"   # Entra ID auth for AKS
+
+# ---------- Azure & Infrastructure as Code ----------
+cask "azure-cli"
+brew "azd"                  # Azure Developer CLI
+cask "powershell@preview"  # stable cask no longer published
+brew "opentofu"
+brew "hashicorp/tap/terraform"
+brew "azure/bicep/bicep"
+
+# ---------- AI / agentic ----------
+cask "copilot-cli"          # GitHub Copilot CLI
+brew "opencode"             # open-source terminal coding agent (any model, incl. local)
+brew "microsoft/foundrylocal/foundrylocal"   # run models locally on Apple Silicon
+
+# ---------- Security & quality gates ----------
+brew "trivy"                # IaC / container / dependency scanning
+brew "gitleaks"             # secret scanning
+brew "pre-commit"
+brew "shellcheck"
+brew "act"                  # run GitHub Actions locally
+
+# ---------- Runtimes ----------
+brew "mise"                 # node/python/tflint/... versions
+brew "uv"                   # fast Python packaging
+brew "direnv"               # per-folder env vars
+
+# ---------- CLI essentials ----------
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "jq"
+brew "yq"
+brew "btop"
+brew "tldr"
+brew "tree"
+brew "wget"
+brew "dockutil"             # scriptable Dock

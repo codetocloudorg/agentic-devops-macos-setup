@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: ShellCheck
+        run: shellcheck -s bash bootstrap.sh install.sh lib/*.sh scripts/*.sh
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  preflight:
+    runs-on: macos-latest   # Apple Silicon runner
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bash 3.2 syntax check
+        run: for f in bootstrap.sh install.sh lib/*.sh scripts/*.sh; do /bin/bash -n "$f"; done
+      - name: Preflight
+        run: CI=1 ./bootstrap.sh --only preflight
+      - name: Brewfile parses
+        run: brew bundle list --file config/Brewfile --all >/dev/null

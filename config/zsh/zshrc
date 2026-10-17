@@ -1,0 +1,47 @@
+# ---- PATH ----
+export PATH="$HOME/.local/bin:$PATH"
+
+# ---- History ----
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS EXTENDED_HISTORY
+
+# ---- Completion ----
+FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+autoload -Uz compinit && compinit -C
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'   # case-insensitive
+zstyle ':completion:*' menu select
+
+setopt AUTO_CD INTERACTIVE_COMMENTS
+
+# ---- Editor ----
+export EDITOR="code --wait"
+export VISUAL="$EDITOR"
+
+# ---- Tools ----
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"          # z <dir>, zi for interactive
+eval "$(mise activate zsh)"
+eval "$(direnv hook zsh)"
+source <(fzf --zsh)                 # Ctrl-R history, Ctrl-T files, Alt-C cd
+
+# ---- Podman as Docker ----
+export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null)"
+alias docker=podman
+alias docker-compose=podman-compose
+
+# ---- Aliases ----
+alias ls='eza --group-directories-first'
+alias ll='eza -lah --git --group-directories-first'
+alias lt='eza --tree --level=2'
+alias cat='bat --paging=never'
+alias lg=lazygit
+alias gs='git status -sb'
+
+# ---- Plugins (keep syntax-highlighting last) ----
+source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# ---- Personal, untracked overrides ----
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
