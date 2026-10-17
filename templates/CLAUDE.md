@@ -6,5 +6,5 @@ Shared agent instructions live in AGENTS.md so Claude Code, GitHub Copilot and O
 
 ## Claude Code specifics
 
-- Guardrails for this repo are in `.claude/settings.json` (asks before apply/delete, blocks reading secrets).
+- Guardrails for this repo are in `.claude/settings.json` (asks before apply/delete, blocks the Read tool on secret files; not a sandbox).
 - TODO: anything only Claude needs to know.

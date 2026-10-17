@@ -169,7 +169,7 @@ AI agents work far better, and more safely, when each repo tells them the rules.
 |---|---|---|
 | [`AGENTS.md`](templates/AGENTS.md) | GitHub Copilot, OpenCode and most other agents | Project context, commands, and **DevOps safety rules**: plan but never apply, never delete cloud resources, never touch secrets, work on branches |
 | [`CLAUDE.md`](templates/CLAUDE.md) | Claude Code | Imports `AGENTS.md`, so you maintain **one** set of rules for all agents |
-| [`.claude/settings.json`](templates/.claude/settings.json) | Claude Code | Enforced guardrails: auto-allows `plan` / `validate` / `lint`; **asks** before `apply`, `azd up`, `kubectl apply/delete`, `git push`; **blocks** reading `.env`, keys, `*.tfvars` and state files, and blocks force-push |
+| [`.claude/settings.json`](templates/.claude/settings.json) | Claude Code | Enforced guardrails: auto-allows `plan` / `validate` / `lint`; **asks** before `apply`, `azd up`, `kubectl apply/delete`, `git push`; **blocks** its file-reading tool from `.env`, keys, `*.tfvars` and state files, and blocks force-push. This is a guardrail, not a sandbox: shell commands can still reach those files, so keep real secrets out of the repo (Key Vault, a password manager) |
 
 Add them to any repo (existing files are never overwritten):
 

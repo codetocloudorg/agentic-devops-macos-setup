@@ -131,7 +131,7 @@ Agents are only as safe as the instructions they get. The repo includes a generi
 - never read or commit secrets; prefer managed identity and Key Vault
 - branches and small commits, never force-push
 
-**[`CLAUDE.md`](../templates/CLAUDE.md)** simply imports `AGENTS.md`, so there's one set of rules for every agent. A **[`.claude/settings.json`](../templates/.claude/settings.json)** goes further and *enforces* it: Claude Code must ask before `terraform apply`, `azd up` or `kubectl delete`, and is blocked from reading `.env`, keys, `*.tfvars` and state files.
+**[`CLAUDE.md`](../templates/CLAUDE.md)** simply imports `AGENTS.md`, so there's one set of rules for every agent. A **[`.claude/settings.json`](../templates/.claude/settings.json)** goes further and *enforces* it: Claude Code must ask before `terraform apply`, `azd up` or `kubectl delete`, and its file-reading tool is blocked from `.env`, keys, `*.tfvars` and state files. Treat that as a guardrail, not a sandbox: the real fix is keeping secrets out of the repo entirely.
 
 Type `agent-init` in any repo to drop all three in.
 
